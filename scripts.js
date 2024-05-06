@@ -111,19 +111,19 @@ loader.load((loader, resources) => {
     removeLoader();
 
     //Mouse listener
-    window.addEventListener('mousedown', () => { 
-        toRun = true; 
+    window.addEventListener('mousedown', () => {
+        toRun = true;
         sprites.wheel.rotation = param.startPosition;
         let blurCount = 0;
-          gsap.to(sprites.wheel, {
+        gsap.to(sprites.wheel, {
             rotation: param.targetPosition + Math.PI * 4, // Задаем конечное значение угла в радианах
-            duration:3, // Длительность в секундах
+            duration: 3, // Длительность в секундах
             ease: "power1.inOut", // Тип easing
             onComplete: function () {
                 param.startPosition = param.targetPosition
                 setTarget()
             }
-        });  
+        });
         /*  gsap.to(sprites.wheel, {
             rotation: param.targetPosition + Math.PI * 4, // Добавляем 4π радианов для двух дополнительных оборотов
             duration: 5, // Длительность анимации в секундах
@@ -142,20 +142,20 @@ loader.load((loader, resources) => {
             }
         });  */
     });
-    window.addEventListener("touchstart", () => { 
+    window.addEventListener("touchstart", () => {
         toRun = true;
         sprites.wheel.rotation = param.startPosition;
         let blurCount = 0;
-          gsap.to(sprites.wheel, {
+        gsap.to(sprites.wheel, {
             rotation: param.targetPosition + Math.PI * 4, // Задаем конечное значение угла в радианах
-            duration:3, // Длительность в секундах
+            duration: 3, // Длительность в секундах
             ease: "power1.inOut", // Тип easing
             onComplete: function () {
                 param.startPosition = param.targetPosition
                 setTarget()
             }
-        });  
-     });
+        });
+    });
 });
 
 
@@ -176,9 +176,9 @@ function initLoop() {
 
         if (toRun) {
 
-            
+
             if (!isMobileDevice())
-              radialBlur.angle = CubicInOut(Math.abs(Math.sin(count)) * param.duration, 0, param.blurAngle, param.duration);
+                radialBlur.angle = CubicInOut(Math.abs(Math.sin(count)) * param.duration, 0, param.blurAngle, param.duration);
             sprites.wheel.rotation = CubicInOut(n, param.startPosition, param.targetPosition - param.startPosition + (Math.PI * 8), param.duration);
             n++;
             count += countShift;
