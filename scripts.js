@@ -21,7 +21,7 @@ const position = [
 let param = {
     startPosition: 0, //From
     targetPosition: degreesToRadians(position[5].position), //To
-    duration: 850,
+    duration: 350,
     blurAngle: 2.3,
     imgBaraban: './img/tiger/baraban.png',
     imgBack: './img/tiger/barabanBackground.png',
