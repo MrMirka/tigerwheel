@@ -1,0 +1,21 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#c {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    top: 100px;
+    left:100px;
+}
+
+#caption {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 25px;
+}
+
