@@ -1,7 +1,6 @@
 let n = 1; //Счетчик кадров 
 let toRun = false;
 let count = 0; //Счетчик блур (нужен для рассчета размития)
-let radialBlur;
 let loaderBlock; //Графический лоадер
 
 const sprites = {}; //Хранилище текстур
@@ -96,13 +95,6 @@ loader.load((loader, resources) => {
     sprites.wheelArrow.height = param.height * 0.22;
     container.addChild(sprites.wheelArrow);
 
-    //Радиальный блур
-    radialBlur = new PIXI.filters.RadialBlurFilter();
-    sprites.wheel.filters = [radialBlur];
-    radialBlur.angle = 0;
-    radialBlur.kernelSize = 120;
-    radialBlur.center = [param.width / 2, param.height / 2];
-    radialBlur.radius = param.width / 2;
     container.transform.position.set(param.width / 2, param.height / 2);
 
     //Скрываем графический лоадер 
