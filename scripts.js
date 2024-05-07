@@ -104,8 +104,8 @@ loader.load((loader, resources) => {
         toRun = true;
         sprites.wheel.rotation = param.startPosition;
         gsap.to(sprites.wheel, {
-            rotation: param.targetPosition + Math.PI * 4, 
-            duration: 3, 
+            rotation: param.targetPosition + Math.PI * 6, 
+            duration: 5, 
             ease: "power1.inOut", 
             onComplete: function () {
                 param.startPosition = param.targetPosition
