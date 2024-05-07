@@ -55,9 +55,6 @@ app.stage.addChild(container);
 initLoaderCircle();
 
 
-//Запуск лупа
-//initLoop();
-
 
 //Loaders
 const loader = new PIXI.Loader();
@@ -75,25 +72,26 @@ loader.load((loader, resources) => {
 
     //Задний фон
     sprites.wheelBack.anchor.set(0.5);
-    sprites.wheelBack.width = param.width;
-    sprites.wheelBack.height = param.height;
+    sprites.wheelBack.width = param.width * 0.972;
+    sprites.wheelBack.height = param.height * 0.972;
     container.addChild(sprites.wheelBack);
 
     //Барабан
-    sprites.wheel.width = param.width * 1.12;
-    sprites.wheel.height = param.height * 1.12;
+    sprites.wheel.width = param.width * 0.789;
+    sprites.wheel.height = param.height * 0.789;
     sprites.wheel.anchor.set(0.5);
     container.addChild(sprites.wheel);
 
     //Логотип
     sprites.wheelLogo.anchor.set(0.5);
-    sprites.wheelLogo.width = param.width * 0.3;
-    sprites.wheelLogo.height = param.height * 0.3;
+    const aspectRatio = sprites.wheelLogo.height / sprites.wheelLogo.width;
+    sprites.wheelLogo.width = param.width * 0.36 * aspectRatio;
+    sprites.wheelLogo.height = sprites.wheelLogo.width * aspectRatio;
     container.addChild(sprites.wheelLogo);
 
     //Стрелка
     sprites.wheelArrow.anchor.set(0.5);
-    sprites.wheelArrow.position.y = -580
+    sprites.wheelArrow.position.y = -param.height * 0.41
     sprites.wheelArrow.width = param.width * 0.22;
     sprites.wheelArrow.height = param.height * 0.22;
     container.addChild(sprites.wheelArrow);
@@ -110,94 +108,26 @@ loader.load((loader, resources) => {
     //Скрываем графический лоадер 
     removeLoader();
 
+    const clickHandle = ()=> {
+        toRun = true;
+        sprites.wheel.rotation = param.startPosition;
+        gsap.to(sprites.wheel, {
+            rotation: param.targetPosition + Math.PI * 4, 
+            duration: 3, 
+            ease: "power1.inOut", 
+            onComplete: function () {
+                param.startPosition = param.targetPosition
+                setTarget()
+            }
+        });
+    }
+
     //Mouse listener
-    window.addEventListener('mousedown', () => {
-        toRun = true;
-        sprites.wheel.rotation = param.startPosition;
-        let blurCount = 0;
-        gsap.to(sprites.wheel, {
-            rotation: param.targetPosition + Math.PI * 4, // Задаем конечное значение угла в радианах
-            duration: 3, // Длительность в секундах
-            ease: "power1.inOut", // Тип easing
-            onComplete: function () {
-                param.startPosition = param.targetPosition
-                setTarget()
-            }
-        });
-        /*  gsap.to(sprites.wheel, {
-            rotation: param.targetPosition + Math.PI * 4, // Добавляем 4π радианов для двух дополнительных оборотов
-            duration: 5, // Длительность анимации в секундах
-            ease: "power1.inOut", // Тип easing для плавного вращения
-            onUpdate: function() {
-                // Увеличиваем значение счётчика
-                blurCount += 0.1; // Настраиваем шаг для плавного изменения
-        
-                // Применяем размытие на основе синусоидальной функции
-                radialBlur.angle = Math.abs(Math.sin(blurCount)) * param.blurAngle;
-            },
-            onComplete: function () {
-               
-                param.startPosition = param.targetPosition
-                setTarget(); // Опционально устанавливаем следующую цель вращения
-            }
-        });  */
-    });
-    window.addEventListener("touchstart", () => {
-        toRun = true;
-        sprites.wheel.rotation = param.startPosition;
-        let blurCount = 0;
-        gsap.to(sprites.wheel, {
-            rotation: param.targetPosition + Math.PI * 4, // Задаем конечное значение угла в радианах
-            duration: 3, // Длительность в секундах
-            ease: "power1.inOut", // Тип easing
-            onComplete: function () {
-                param.startPosition = param.targetPosition
-                setTarget()
-            }
-        });
-    });
+    window.addEventListener('mousedown', clickHandle);
+    window.addEventListener("touchstart", clickHandle);
 });
 
 
-
-
-
-
-//Инициализируем анимацию, движение колеса когда toRun = true
-function initLoop() {
-
-    let countShift = (1 + param.blurAngle) / param.duration;
-    app.ticker.add(() => {
-
-        //Loader
-        if (loaderBlock != undefined) {
-            loaderBlock.rotation += 0.15;
-        }
-
-        if (toRun) {
-
-
-            if (!isMobileDevice())
-                radialBlur.angle = CubicInOut(Math.abs(Math.sin(count)) * param.duration, 0, param.blurAngle, param.duration);
-            sprites.wheel.rotation = CubicInOut(n, param.startPosition, param.targetPosition - param.startPosition + (Math.PI * 8), param.duration);
-            n++;
-            count += countShift;
-            if (n === param.duration) {
-                count = 0;
-                toRun = false;
-                n = 1;
-                updateParam(param.targetPosition);
-                setTarget();
-            }
-        }
-    });
-}
-
-//Изинг
-function CubicInOut(t, b, c, d) {
-    if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
-    return c / 2 * ((t -= 2) * t * t + 2) + b;
-}
 
 //Тестовая функция для рандомного положения барабана (заменить на нужное поведение) 
 function setTarget() {
@@ -215,21 +145,6 @@ function setTarget() {
 
 }
 
-function updateParam(target) {
-    sprites.wheel.rotation = target; //Обнуляем количесво оборотов колеса (чтобы счисление было в пределах 0 - 2PI)
-    param.startPosition = target; //Устанавливаем текущее положение в стартовое
-}
-
-//Проверка на мобильные устройства
-//Блур включаем только на десктопах и айфонах
-function isMobileDevice() {
-
-    if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 
 //Квадратный лоадер
@@ -284,5 +199,7 @@ function removeLoader() {
 function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
+
+
 
 
